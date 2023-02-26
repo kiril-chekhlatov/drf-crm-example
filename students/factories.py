@@ -37,7 +37,7 @@ class StudentFactory(factory.Factory):
     class Meta:
         model = Student
 
-    contract_type = fuzzy.FuzzyChoice(Contracts.CONTACT_TYPE_CHOICES)
+    contract_type = fuzzy.FuzzyInteger(low=1, high=len(Contracts.CONTACT_TYPE_CHOICES))
     name = factory.Faker('name')
     surname = factory.Faker('name')
     middle_name = factory.Faker('name')
@@ -51,7 +51,7 @@ class StudentFactory(factory.Factory):
     region = factory.SubFactory(RegionFactory)
     authority = factory.Faker('address')
     major = factory.SubFactory(MajorFactory)
-    gender = fuzzy.FuzzyChoice(Genders.GENDER_CHOICES)
+    gender = fuzzy.FuzzyInteger(low=1, high=len(Genders.GENDER_CHOICES))
     discount = True
     percent = fuzzy.FuzzyFloat(low=1)
     discount_from = fuzzy.FuzzyDate(datetime.date.today())

@@ -1,35 +1,21 @@
-from users.helpers import Roles
-
-from rest_framework import status
-
 from django.urls import reverse
-from rest_framework.test import APITestCase, APIClient
-from users.serializers import AdminUserSerializer
-from django.contrib.auth.hashers import make_password
-from django.core.files.base import ContentFile
+from rest_framework import status
+from rest_framework.test import APIClient, APITestCase
+
+from users.factories import AdminUserFactory, SuperUserFactory
 
 
 class JwtAPITest(APITestCase):
     def setUp(self) -> None:
-        self.super_admin_data = {
-            'id': 1,
-            'username': 'admin',
-            'password': make_password('admin'),
-            'is_staff': True,
-            'is_superuser': True
+        self.super_admin = SuperUserFactory.create()
+        self.payload_data = {
+            'username': self.super_admin.username,
+            'password': 'password'
         }
-        self.data_for_request = {
-            'username': 'admin',
-            'password': 'admin'
-        }
-        serializer = AdminUserSerializer(data=self.super_admin_data)
-        if serializer.is_valid():
-            serializer.save()
 
     def get_JWT_tokens(self):
         url = reverse('token_obtain_pair')
-        data = {'username': self.data_for_request['username'],
-                'password': self.data_for_request['password']}
+        data = self.payload_data
         response = self.client.post(url, data, format='json')
         return response
 
@@ -47,25 +33,16 @@ class JwtAPITest(APITestCase):
 
 class AdminUserAPITest(APITestCase):
     def setUp(self) -> None:
-        self.super_admin_data = {
-            'id': 1,
-            'username': 'admin',
-            'password': make_password('admin'),
-            'is_staff': True,
-            'is_superuser': True
-        }
+        self.super_admin = SuperUserFactory.create()
+        self.admin = AdminUserFactory.stub()
         self.payload_data = {
-            'username': 'admin2',
-            'password': 'admin2',
-            'appointment': 'Appointment',
-            'role': Roles.RECTOR_ADMIN,
-            'middle_name': 'Middle name',
-            'photo': ContentFile(b"...", name="foo.jpeg")
+            'username': self.admin.username,
+            'password': self.admin.password,
+            'appointment': self.admin.appointment,
+            'role': self.admin.role,
+            'middle_name': self.admin.middle_name,
+            'photo': self.admin.photo
         }
-
-        serializer = AdminUserSerializer(data=self.super_admin_data)
-        if serializer.is_valid():
-            self.super_admin = serializer.save()
 
     def test_creation(self):
         url = reverse('admin-users-list')
