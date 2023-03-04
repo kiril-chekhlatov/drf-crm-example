@@ -87,9 +87,9 @@ class AdminUserAPITest(APITestCase):
         response_data = response.put(url, data=self.data_for_put_update)
         self.assertEqual(response_data.status_code, status.HTTP_200_OK)
         self.assertEqual(response_data.json()['id'], self.created_admin.id)
-        self.assertEqual(response_data.json()['username'], self.data_for_put_update['username'])
-        
-    
+        self.assertEqual(response_data.json()[
+                         'username'], self.data_for_put_update['username'])
+
     def test_partical_update(self):
         url = reverse('admin-users-detail', args={self.created_admin.id})
         response = APIClient()
@@ -97,7 +97,8 @@ class AdminUserAPITest(APITestCase):
         response_data = response.patch(url, data=self.data_for_patch_update)
         self.assertEqual(response_data.status_code, status.HTTP_200_OK)
         self.assertEqual(response_data.json()['id'], self.created_admin.id)
-        self.assertEqual(response_data.json()['username'], self.data_for_patch_update['username'])
+        self.assertEqual(response_data.json()[
+                         'username'], self.data_for_patch_update['username'])
 
     def test_delete(self):
         url = reverse('admin-users-detail', args={self.created_admin.id})
@@ -105,4 +106,3 @@ class AdminUserAPITest(APITestCase):
         response.force_authenticate(self.super_admin)
         response_data = response.delete(url)
         self.assertEqual(response_data.status_code, status.HTTP_204_NO_CONTENT)
-

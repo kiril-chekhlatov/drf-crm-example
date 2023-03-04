@@ -1,11 +1,8 @@
-from students.helpers import Genders, Contracts, Statues
 from users.helpers import Roles
-from users.serializers import AdminUserSerializer
 
 from rest_framework import status
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
-from students.serializers import CommentSerializer, MajorSerializer, RegionSerializer, StudentSerializer
 from students.factories import StudentFactory, MajorFactory, CommentFactory, RegionFactory
 from users.factories import AdminUserFactory
 from students.models import Student

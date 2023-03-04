@@ -6,6 +6,7 @@ from users.helpers import Roles
 from django.core.files.base import ContentFile
 from factory import fuzzy
 
+
 class AdminUserFactory(factory.django.DjangoModelFactory):
     username = factory.Sequence(lambda n: 'username%d' % n)
     password = factory.Sequence(lambda n: 'password%d' % n)
@@ -18,6 +19,7 @@ class AdminUserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = AdminUser
+
 
 class SuperUserFactory(factory.django.DjangoModelFactory):
     username = 'super_admin'

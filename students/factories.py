@@ -37,7 +37,8 @@ class StudentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Student
 
-    contract_type = fuzzy.FuzzyInteger(low=1, high=len(Contracts.CONTACT_TYPE_CHOICES))
+    contract_type = fuzzy.FuzzyInteger(
+        low=1, high=len(Contracts.CONTACT_TYPE_CHOICES))
     name = factory.Faker('name')
     surname = factory.Faker('name')
     middle_name = factory.Faker('name')
