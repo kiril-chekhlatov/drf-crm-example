@@ -6,9 +6,9 @@ from students.views import (MajorViewSet, RegionViewSet,
                             StudentViewSet)
 
 router = routers.SimpleRouter()
-router.register(r'students', StudentViewSet)
-router.register(r'majors', MajorViewSet)
-router.register(r'regions', RegionViewSet)
+router.register(r'students', StudentViewSet, basename='student-view')
+router.register(r'majors', MajorViewSet, basename='major-view')
+router.register(r'regions', RegionViewSet, basename='region-view')
 urlpatterns = router.urls
 
 urlpatterns += [

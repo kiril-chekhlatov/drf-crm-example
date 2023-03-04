@@ -8,7 +8,7 @@ from students.models import Student, Comment, Major, Region
 from users.factories import AdminUserFactory
 
 
-class CommentFactory(factory.Factory):
+class CommentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Comment
 
@@ -17,7 +17,7 @@ class CommentFactory(factory.Factory):
     message = factory.Sequence(lambda n: 'message %d' % n)
 
 
-class MajorFactory(factory.Factory):
+class MajorFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Major
 
@@ -26,14 +26,14 @@ class MajorFactory(factory.Factory):
     description = factory.Sequence(lambda n: 'description %d' % n)
 
 
-class RegionFactory(factory.Factory):
+class RegionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Region
 
     name = factory.Sequence(lambda n: 'name %d' % n)
 
 
-class StudentFactory(factory.Factory):
+class StudentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Student
 
@@ -44,7 +44,7 @@ class StudentFactory(factory.Factory):
     birth_of_date = fuzzy.FuzzyDate(datetime.date.today())
     email = factory.Faker('email')
     address = factory.Faker('address')
-    phone = factory.Faker('phone_number')
+    phone = '+998919191919'
     passport_series = 'QQ'
     passport_number = fuzzy.FuzzyInteger(low=1)
     PIN = '21312312'
@@ -61,18 +61,10 @@ class StudentFactory(factory.Factory):
     super_contract = True
     super_contract_sum = fuzzy.FuzzyInteger(low=1)
     passport_document = factory.LazyAttribute(
-        lambda _: ContentFile(
-            factory.django.FileField()._make_data(
-                {'width': 1024, 'height': 768}
-            ), 'passport.pdf'
-        )
+        lambda _: ContentFile(b'...', name="passport_document.pdf")
     )
     IELTS_document = factory.LazyAttribute(
-        lambda _: ContentFile(
-            factory.django.FileField()._make_data(
-                {'width': 1024, 'height': 768}
-            ), 'IELTS.pdf'
-        )
+        lambda _: ContentFile(b'...', name="IELTS_document.pdf")
     )
     status = 1
     # comments = factory.SubFactory(CommentFactory)
