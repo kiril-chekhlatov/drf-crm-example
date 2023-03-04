@@ -3,7 +3,6 @@ from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
 from users.factories import AdminUserFactory, SuperUserFactory
-from users.serializers import AdminUserSerializer
 
 
 class JwtAPITest(APITestCase):
@@ -36,6 +35,7 @@ class AdminUserAPITest(APITestCase):
     def setUp(self) -> None:
         self.super_admin = SuperUserFactory.create()
         self.admin = AdminUserFactory.stub()
+        self.admin_update_data = AdminUserFactory.stub()
         self.created_admin = AdminUserFactory.create()
         self.payload_data = {
             'username': self.admin.username,
@@ -44,6 +44,17 @@ class AdminUserAPITest(APITestCase):
             'role': self.admin.role,
             'middle_name': self.admin.middle_name,
             'photo': self.admin.photo
+        }
+        self.data_for_put_update = {
+            'username': self.admin_update_data.username,
+            'password': self.admin_update_data.password,
+            'appointment': self.admin_update_data.appointment,
+            'role': self.admin_update_data.role,
+            'middle_name': self.admin_update_data.middle_name,
+            'photo': self.admin_update_data.photo
+        }
+        self.data_for_patch_update = {
+            'username': 'patch_updated_username',
         }
 
     def test_creation(self):
@@ -68,6 +79,25 @@ class AdminUserAPITest(APITestCase):
         response_data = response.get(url)
         self.assertEqual(response_data.status_code, status.HTTP_200_OK)
         self.assertEqual(response_data.json()['id'], self.created_admin.id)
+
+    def test_update(self):
+        url = reverse('admin-users-detail', args={self.created_admin.id})
+        response = APIClient()
+        response.force_authenticate(self.super_admin)
+        response_data = response.put(url, data=self.data_for_put_update)
+        self.assertEqual(response_data.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_data.json()['id'], self.created_admin.id)
+        self.assertEqual(response_data.json()['username'], self.data_for_put_update['username'])
+        
+    
+    def test_partical_update(self):
+        url = reverse('admin-users-detail', args={self.created_admin.id})
+        response = APIClient()
+        response.force_authenticate(self.super_admin)
+        response_data = response.patch(url, data=self.data_for_patch_update)
+        self.assertEqual(response_data.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_data.json()['id'], self.created_admin.id)
+        self.assertEqual(response_data.json()['username'], self.data_for_patch_update['username'])
 
     def test_delete(self):
         url = reverse('admin-users-detail', args={self.created_admin.id})
