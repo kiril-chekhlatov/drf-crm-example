@@ -4,7 +4,6 @@ from students.models import Comment, Major, Region, Student
 
 
 class CommentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Comment
         fields = "__all__"
@@ -36,15 +35,14 @@ class StudentSerializer(serializers.ModelSerializer):
         super().validate(attrs)
         errors = {}
         required = {
-            'discount': ('percent', 'discount_from', 'discount_to'),
-            'super_contract': ('super_contract_sum', )
+            "discount": ("percent", "discount_from", "discount_to"),
+            "super_contract": ("super_contract_sum",),
         }
         for required_flag, required_fields in required.items():
             if required_flag in attrs and attrs[required_flag] == True:
                 for field in required_fields:
                     if field not in attrs or attrs[field] == None:
-                        errors.update(
-                            {field: f'You must fill in the field {field}'})
+                        errors.update({field: f"You must fill in the field {field}"})
 
         if len(errors) != 0:
             raise serializers.ValidationError(errors)

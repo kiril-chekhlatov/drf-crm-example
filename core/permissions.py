@@ -12,9 +12,12 @@ class IsSuperUser(permissions.BasePermission):
 
 
 class IsAdminUser(permissions.BasePermission):
-
     def has_object_permission(self, request, view, obj):
-        if request.user.role in (Roles.ADMIN, Roles.MARKETING_ADMIN, Roles.MARKETING_ADMIN):
+        if request.user.role in (
+            Roles.ADMIN,
+            Roles.MARKETING_ADMIN,
+            Roles.MARKETING_ADMIN,
+        ):
             return True
         return False
 

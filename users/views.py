@@ -4,23 +4,27 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.views import (TokenObtainPairView,
-                                            TokenRefreshView)
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from core.helpers import create_choices_dict
+from core.permissions import IsSuperUser
 from core.serializers import ChoiceFieldSerializer
 from users.helpers import Roles
 from users.models import AdminUser
-from core.permissions import IsSuperUser
-from users.serializers import (AdminUserSerializer,
-                               TokenObtainPairResponseSerializer,
-                               TokenRefreshResponseSerializer)
+from users.serializers import (
+    AdminUserSerializer,
+    TokenObtainPairResponseSerializer,
+    TokenRefreshResponseSerializer,
+)
 
 
 class AdminUserViewSet(ModelViewSet):
     queryset = AdminUser.objects.all()
     serializer_class = AdminUserSerializer
-    permission_classes = (IsAuthenticated, IsSuperUser, )
+    permission_classes = (
+        IsAuthenticated,
+        IsSuperUser,
+    )
 
 
 class DecoratedTokenObtainPairView(TokenObtainPairView):
@@ -44,7 +48,7 @@ class DecoratedTokenRefreshView(TokenRefreshView):
 
 
 class UsersChoicesAPIView(APIView):
-    _choices_list = (Roles, )
+    _choices_list = (Roles,)
 
     @swagger_auto_schema(
         responses={
@@ -56,7 +60,7 @@ class UsersChoicesAPIView(APIView):
             data = create_choices_dict(self._choices_list)
             code = status.HTTP_200_OK
         except Exception as e:
-            data = {'error': e}
+            data = {"error": e}
             code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
         return Response(data=data, status=code)
